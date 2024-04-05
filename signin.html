@@ -21,26 +21,28 @@
 
   <main>
 
-    <section class="logbox">
+    <section class="Login">
 
-      <form method="post" action="/" id="login-form">
+      <form method="post" id="Login-form">
 
-        <div class="logbox__input-box">
-          <label class="user" for="email">이메일</label>
-          <input type="email" name="email" class="logbox__input-box-txt" placeholder="이메일을 입력해주세요">
+        <div class="Login__input-box">
+          <label class="email-label" for="email">이메일</label>
+          <input type="email" name="email" class="Login__input-field" placeholder="이메일을 입력해주세요">
+          <div class="email-error error-message"></div>
         </div>
 
-        <div class="logbox__input-box password-input">
-          <label class="user" for="password">비밀번호</label>
+        <div class="Login__input-box password-input">
+          <label class="email-label" for="password">비밀번호</label>
           <div class="password-wrapper">
-            <input type="password" name="password" class="logbox__input-box-txt" placeholder="비밀번호를 입력해주세요">
+            <input type="password" name="password" class="Login__input-field" placeholder="비밀번호를 입력해주세요">
+            <div class="password-error error-message"></div>
             <div class="password-wrapper__toggle">
               <img src="images/home/눈.png" id="passwordToggle">
             </div>
           </div>
         </div>
 
-        <button type="submit" class="logbox__submit">로그인</button>
+        <button type="submit" class="Login__submit">로그인</button>
 
         <div class="social-login">
           <span class="social-login__text">간편 로그인 하기</span>
