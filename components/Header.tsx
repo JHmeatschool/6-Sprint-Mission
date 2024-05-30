@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import { StyledLink } from "../styles/CommonStyles";
 
 const GlobalHeader = styled.header`
   display: flex;
@@ -47,7 +46,6 @@ const NavList = styled.ul`
   gap: 8px;
   font-weight: bold;
   font-size: 16px;
-  color: var(--gray-600);
 
   @media (min-width: 768px) {
     gap: 36px;
@@ -56,8 +54,13 @@ const NavList = styled.ul`
 `;
 
 const NavItem = styled.li`
-  a:hover {
-    color: var(--blue);
+  a {
+    color: #4b5563;
+    text-decoration: none;
+
+    &:hover {
+      color: #1967d6;
+    }
   }
 `;
 
