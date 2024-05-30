@@ -6,6 +6,7 @@ const GlobalHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  width: 100%;
   height: 70px;
   border-bottom: 1px solid #dfdfdf;
 `;
