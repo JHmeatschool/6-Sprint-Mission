@@ -5,7 +5,9 @@ import styled from "styled-components";
 const GlobalHeader = styled.header`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
+  height: 70px;
+  border-bottom: 1px solid #dfdfdf;
 `;
 
 const HeaderLeft = styled.div`
@@ -82,7 +84,7 @@ const Header: React.FC = () => {
         <nav>
           <NavList>
             <NavItem>
-              <Link href="/community">자유게시판</Link>
+              <Link href="/boards">자유게시판</Link>
             </NavItem>
             <NavItem>
               <Link href="/items">중고마켓</Link>
