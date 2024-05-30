@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { formatDate } from "../lib/dateUtils";
 import { searchArticles } from "../lib/searchUtils";
+import { sortByLatest, sortByLikes } from "../lib/sortUtils";
 
 export interface Article {
   id: number;
@@ -145,11 +146,57 @@ const SearchInput = styled.input`
   border-radius: 5px;
 `;
 
+const SortDropdown = styled.div`
+  position: relative;
+`;
+
+const SortButton = styled.button`
+  background-color: transparent;
+  border: none;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const DropdownContent = styled.div<{ visible: boolean }>`
+  display: ${(props) => (props.visible ? "block" : "none")};
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+`;
+
+const DropdownItem = styled.button`
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`;
 export default function Boards() {
   const [bestArticles, setBestArticles] = useState<Article[]>([]);
   const [allArticles, setAllArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState<string>("latest");
 
   useEffect(() => {
     async function fetchArticles() {
@@ -175,6 +222,23 @@ export default function Boards() {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
+
+  const handleSortByLatest = () => {
+    setSortBy("최신순");
+    setDropdownVisible(false);
+  };
+
+  const handleSortByLikes = () => {
+    setSortBy("좋아요순");
+    setDropdownVisible(false);
+  };
+
+  let sortedArticles: Article[] = allArticles;
+  if (sortBy === "최신순") {
+    sortedArticles = sortByLatest(allArticles);
+  } else if (sortBy === "좋아요순") {
+    sortedArticles = sortByLikes(allArticles);
+  }
 
   const filteredArticles = searchArticles(allArticles, searchQuery);
 
@@ -221,6 +285,15 @@ export default function Boards() {
           onChange={handleSearchChange}
         />
       </SearchContainer>
+      <SortDropdown>
+        <SortButton onClick={() => setDropdownVisible(!dropdownVisible)}>
+          {sortBy} ▼
+        </SortButton>
+        <DropdownContent visible={dropdownVisible}>
+          <DropdownItem onClick={handleSortByLatest}>최신 순</DropdownItem>
+          <DropdownItem onClick={handleSortByLikes}>좋아요 순</DropdownItem>
+        </DropdownContent>
+      </SortDropdown>
       <AllArticlesWrapper>
         {filteredArticles.map((article) => (
           <ArticleContainer key={article.id}>
