@@ -4,11 +4,21 @@ import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { formatDate } from "../lib/dateUtils";
+import { searchArticles } from "../lib/searchUtils";
 
-const Layout = styled.div`
-  width: 100%;
-  margin: 0 auto;
-`;
+export interface Article {
+  id: number;
+  title: string;
+  content: string;
+  writer: {
+    id: number;
+    nickname: string;
+  };
+  likeCount: number;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const ArticlesWrapper = styled.div`
   display: flex;
@@ -29,14 +39,14 @@ const ArticleContainer = styled.div`
   position: relative;
 `;
 
-const BestTitle = styled.h2`
+const BoardTitle = styled.h2`
   font-family: Pretendard;
   font-size: 20px;
   font-weight: 700;
   line-height: 23.87px;
   text-align: left;
   position: relative;
-  left: 360px;
+  left: 180px;
 `;
 
 const BestBadge = styled.div`
@@ -84,23 +94,62 @@ const DateContainer = styled.p`
   color: #9ca3af;
 `;
 
-interface Article {
-  id: number;
-  title: string;
-  content: string;
-  writer: {
-    id: number;
-    nickname: string;
-  };
-  likeCount: number;
-  image: string;
-  createdAt: string;
-  updatedAt: string;
-}
+const AllArticlesWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  margin: 0 auto;
+`;
+
+const BoardTitleContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const RegisterButton = styled.button`
+  width: 88px;
+  height: 42px;
+  left: 1113px;
+  gap: 10px;
+  border: none;
+  border-radius: 8px;
+  opacity: 0px;
+  background-color: #3692ff;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  text-align: left;
+  color: #ffffff;
+  text-align: center;
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const SearchInput = styled.input`
+  width: 90%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
 
 export default function Boards() {
   const [bestArticles, setBestArticles] = useState<Article[]>([]);
+  const [allArticles, setAllArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     async function fetchArticles() {
@@ -113,6 +162,7 @@ export default function Boards() {
         const bestArticles = sortedArticles.slice(0, 3);
         console.log("Best articles:", bestArticles);
         setBestArticles(bestArticles);
+        setAllArticles(response.data.list);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching articles:", error);
@@ -122,14 +172,20 @@ export default function Boards() {
     fetchArticles();
   }, []);
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredArticles = searchArticles(allArticles, searchQuery);
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <Layout>
+    <div>
       <Header />
-      <BestTitle>베스트 게시글</BestTitle>
+      <BoardTitle>베스트 게시글</BoardTitle>
       <ArticlesWrapper>
         {bestArticles.map((article) => (
           <ArticleContainer key={article.id}>
@@ -152,6 +208,33 @@ export default function Boards() {
           </ArticleContainer>
         ))}
       </ArticlesWrapper>
-    </Layout>
+
+      <BoardTitleContainer>
+        <BoardTitle>게시글</BoardTitle>
+        <RegisterButton>글쓰기</RegisterButton>
+      </BoardTitleContainer>
+      <SearchContainer>
+        <SearchInput
+          type="text"
+          placeholder="검색어를 입력하세요..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+        />
+      </SearchContainer>
+      <AllArticlesWrapper>
+        {filteredArticles.map((article) => (
+          <ArticleContainer key={article.id}>
+            <ArticleTitle>{article.title}</ArticleTitle>
+            <WriterLikeDateContainer>
+              <WriterLikeContainer>
+                <p>{article.writer.nickname}</p>
+                <p>🤍{article.likeCount}</p>
+              </WriterLikeContainer>
+              <DateContainer>{formatDate(article.createdAt)}</DateContainer>
+            </WriterLikeDateContainer>
+          </ArticleContainer>
+        ))}
+      </AllArticlesWrapper>
+    </div>
   );
 }
