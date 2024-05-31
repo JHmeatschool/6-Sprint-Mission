@@ -270,7 +270,6 @@ export default function Boards() {
           </ArticleContainer>
         ))}
       </ArticlesWrapper>
-
       <BoardTitleContainer>
         <BoardTitle>게시글</BoardTitle>
         <RegisterButton>글쓰기</RegisterButton>
