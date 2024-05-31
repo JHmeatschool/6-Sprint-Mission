@@ -1,6 +1,5 @@
 import instance from "../lib/axios";
 import Image from "next/image";
-import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { formatDate } from "../lib/dateUtils";
@@ -248,7 +247,6 @@ export default function Boards() {
 
   return (
     <div>
-      <Header />
       <BoardTitle>베스트 게시글</BoardTitle>
       <ArticlesWrapper>
         {bestArticles.map((article) => (
